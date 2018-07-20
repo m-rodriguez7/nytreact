@@ -12,7 +12,10 @@ const Results = props => {
                     {props.date}
                 </div>
                 <div className="col">
-                    {props.url}
+                    <a href={props.url}>{props.url}</a>
+                </div>
+                <div className = "col">
+                    <button className="btn btn-success" title={props.title} date={props.date} url={props.url} onClick={props.onClick} _id={props._id}>Save</button>
                 </div>
             </div>
         </div>

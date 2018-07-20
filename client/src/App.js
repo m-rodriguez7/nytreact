@@ -45,6 +45,12 @@ class App extends Component {
     }); 
   };
 
+
+  saveArticle = () => {
+    console.log("save button clicked!")
+    console.log(this.title);
+  };
+
   renderArticles = () => {
     return (
       this.state.results.map(article => {
@@ -55,6 +61,7 @@ class App extends Component {
         title={article.headline.main}
         date={article.pub_date}
         url={article.web_url}
+        onClick={() => this.saveArticle()}
       />)
     }))
   }
