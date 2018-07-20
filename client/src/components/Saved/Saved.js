@@ -3,17 +3,23 @@ import React from "react";
 const Saved = props  => {
     return(
         <div className="container">
+            
             <div className="row">
                 <div className="col">
-                    <h3 className="text-center">Saved</h3>
+                    {props.title}
                 </div>
-            </div>
-            <div className="row">
                 <div className="col">
-                    {props.children}
+                    {props.date}
+                </div>
+                <div className="col">
+                    <a href={props.url}>{props.url}</a>
+                </div>
+                <div className = "col">
+                    <button className="btn btn-danger" title={props.title} date={props.date} url={props.url} onClick={props.onClick} >delete</button>
                 </div>
             </div>
         </div>
     )    
-}
+};
+
 export default Saved;

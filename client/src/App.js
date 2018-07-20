@@ -12,16 +12,12 @@ class App extends Component {
     startDate: "",
     endDate: "",
     saved: [],
-    results: [],
-    error: ""
+    results: []
   };
 
   // When the component mounts, get a list of all available base breeds and update this.state.breeds
   componentDidMount() {
-    /* API.getBaseBreedsList()
-      .then(res => this.setState({ breeds: res.data.message }))
-      .catch(err => console.log(err)); */
-      console.log("page mounted!")
+    console.log("page mounted!")
   }
 
   handleInputChange = event => {
@@ -31,10 +27,6 @@ class App extends Component {
     });
   };
 
- /*  submitAndRender = () => {
-    this.handleFormSubmit();
-    this.renderArticles();
-  } */
   handleFormSubmit = event => {
     event.preventDefault();
     console.log(this.state.query); // 
@@ -45,11 +37,29 @@ class App extends Component {
     }); 
   };
 
-
-  saveArticle = () => {
+  savedArticleLoad = () => {
+    console.log("help");
+    API.savedArticles()
+    .then(article => {
+      return(
+        <Saved
+          title={article.title}
+          date={article.url}
+          url={article.url}
+          onClick={() => this.deleteArticle(article.title)}
+        />
+      )
+    })
+  }
+  saveArticle = (title, date, url) => {
     console.log("save button clicked!")
-    console.log(this.title);
+    API.saveNew(title, date, url);
   };
+
+  deleteArticle = (title) => {
+    console.log("delete clicked");
+    API.deleteArticle(title);
+  }
 
   renderArticles = () => {
     return (
@@ -61,7 +71,7 @@ class App extends Component {
         title={article.headline.main}
         date={article.pub_date}
         url={article.web_url}
-        onClick={() => this.saveArticle()}
+        onClick={() => this.saveArticle(article.headline.main, article.pub_date, article.web_url)}
       />)
     }))
   }
@@ -104,10 +114,11 @@ class App extends Component {
           <h3 className="text-center">Articles</h3>
           {this.renderArticles()}
         </div>
+        <div>
+          <h3 className="text-center">Saved</h3>
+          {this.savedArticleLoad()}
+        </div>
 
-
-
-        <Saved>{this.state.saved}</Saved>
       </div>
     );
   }
