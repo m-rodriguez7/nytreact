@@ -17,7 +17,13 @@ if (process.env.NODE_ENV === "production") {
 
 // Define API routes here
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI, err => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("mongodb connected")
+  }
+});
 
 // Send every other request to the React app
 // Define any API routes before this runs
@@ -41,7 +47,7 @@ app.get("/articles", (req,res) => {
 
 app.post("/save/:object", (req,res) => {
   console.log("world");
-  db.Article.create(article)
+  db.Article.create(req.params.object)
     .then(dbArticle => {
       console.log(dbArticle);
     })

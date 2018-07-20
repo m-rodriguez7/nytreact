@@ -12,7 +12,8 @@ class App extends Component {
     startDate: "",
     endDate: "",
     saved: [],
-    results: []
+    results: [],
+    api: API
   };
 
   // When the component mounts, get a list of all available base breeds and update this.state.breeds
@@ -81,14 +82,16 @@ class App extends Component {
       articleObject.title=article.headline;
       articleObject.date=article.pub_date;
       articleObject.url=article.web_url;
-      return (<Results
+      return (
+        <Results
         _id={article._id}
         key={article._id}
         title={article.headline.main}
         date={article.pub_date}
         url={article.web_url}
-        onClick={() => this.saveArticle(articleObject)}
-      />)
+        onClick={() => this.saveArticle(articleObject)} // this button throws a 404
+        />
+      )
     })
   }
   
