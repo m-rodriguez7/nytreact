@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/nytreact"
 const db = require("./models/index");
+const mongoose = require('mongoose');
 
 // Define middleware here
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -38,12 +39,8 @@ app.get("/articles", (req,res) => {
     });
 })
 
-app.post("/articles/:title/:date/:url", (req,res) => {
+app.post("/save/:object", (req,res) => {
   console.log("world");
-  const article = {};
-  article.title = String(req.params.title);
-  article.date = String(req.params.date);
-  article.url = String(req.params.url);
   db.Article.create(article)
     .then(dbArticle => {
       console.log(dbArticle);
@@ -56,7 +53,7 @@ app.post("/articles/:title/:date/:url", (req,res) => {
 app.delete("/articles/:title", (req, res) => {
   console.log("exterminate");
   db.Article.remove({
-    title: req.params.title
+    _id: req.params.id
   })
   .then(dbArticle => {
     res.json(dbArticle);

@@ -15,7 +15,7 @@ const Saved = props  => {
                     <a href={props.url}>{props.url}</a>
                 </div>
                 <div className = "col">
-                    <button className="btn btn-danger" title={props.title} date={props.date} url={props.url} onClick={props.onClick} >delete</button>
+                    <button className="btn btn-danger" title={props.title} id={props.id} onClick={props.onClick}>delete</button>
                 </div>
             </div>
         </div>

@@ -18,6 +18,7 @@ class App extends Component {
   // When the component mounts, get a list of all available base breeds and update this.state.breeds
   componentDidMount() {
     console.log("page mounted!")
+    this.savedArticleLoad();
   }
 
   handleInputChange = event => {
@@ -28,8 +29,7 @@ class App extends Component {
   };
 
   handleFormSubmit = event => {
-    event.preventDefault();
-    console.log(this.state.query); // 
+    event.preventDefault(); // 
     API.getArticles(this.state.query, this.state.startDate, this.state.endDate)
     .then(res => {
       this.setState({ results: (res.data.response.docs) });
@@ -38,42 +38,58 @@ class App extends Component {
   };
 
   savedArticleLoad = () => {
-    console.log("help");
     API.savedArticles()
-    .then(article => {
-      return(
-        <Saved
-          title={article.title}
-          date={article.url}
-          url={article.url}
-          onClick={() => this.deleteArticle(article.title)}
-        />
-      )
+    .then(res => {
+      this.setState({ saved: res.data })
     })
-  }
-  saveArticle = (title, date, url) => {
-    console.log("save button clicked!")
-    API.saveNew(title, date, url);
   };
 
-  deleteArticle = (title) => {
+  renderSavedArticles = () => {
+    return(
+      this.state.saved.map(article => {
+        return(
+          <Saved
+            id = {article._id}
+            title={article.title}
+            date={article.url}
+            url={article.url}
+            onClick={() => this.deleteArticle(article._id)}
+          />
+        )
+      })
+    );
+  };
+
+  saveArticle = (title, date, url) => {
+    console.log("save button clicked!")
+    let object = {}
+    object.title=title;
+    object.date=date;
+    object.url=url;
+    API.saveNewArticle(object);
+  };
+
+  deleteArticle = (id) => {
     console.log("delete clicked");
-    API.deleteArticle(title);
+    API.deleteArticle(id);
   }
 
   renderArticles = () => {
-    return (
-      this.state.results.map(article => {
+    return this.state.results.map(article => {
       console.log(article);
+      let articleObject = {}
+      articleObject.title=article.headline;
+      articleObject.date=article.pub_date;
+      articleObject.url=article.web_url;
       return (<Results
         _id={article._id}
         key={article._id}
         title={article.headline.main}
         date={article.pub_date}
         url={article.web_url}
-        onClick={() => this.saveArticle(article.headline.main, article.pub_date, article.web_url)}
+        onClick={() => this.saveArticle(articleObject)}
       />)
-    }))
+    })
   }
   
   
@@ -116,7 +132,7 @@ class App extends Component {
         </div>
         <div>
           <h3 className="text-center">Saved</h3>
-          {this.savedArticleLoad()}
+          {this.renderSavedArticles()}
         </div>
 
       </div>

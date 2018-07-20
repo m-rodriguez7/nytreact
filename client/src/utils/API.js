@@ -13,11 +13,11 @@ export default {
         return axios.get("/articles");
     },
 
-    saveNew: (title, date, url) => {
-        axios.post(`/articles/"${title}"/"${date}"/"${url}"`);
+    saveNewArticle: (object) => {
+        axios.post("/save/", object);
     },
 
-    deleteArticle: title => {
-        axios.delete("/articles/" + title);
+    deleteArticle: id => {
+        axios.delete("/articles/" + id);
     }
 }
