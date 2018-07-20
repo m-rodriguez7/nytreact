@@ -4,6 +4,7 @@ import Search from "./components/Search";
 import Results from "./components/Results";
 import Saved from "./components/Saved";
 import API from "./utils/API"
+import { Input, FormBtn } from "./components/Form";
 
 class App extends Component {
   state = {
@@ -24,24 +25,39 @@ class App extends Component {
   }
 
   handleInputChange = event => {
-    this.setState({ query: event.target.value }, { startDate: event.target.value }, {endDate: event.target.value });
-    console.log(this.state.query);
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
   };
 
+ /*  submitAndRender = () => {
+    this.handleFormSubmit();
+    this.renderArticles();
+  } */
   handleFormSubmit = event => {
     event.preventDefault();
-    console.log("submit clicked!!")
-    console.log(this.state.query);
-    /* API.getDogsOfBreed(this.state.search)
-      .then(res => {
-        if (res.data.status === "error") {
-          throw new Error(res.data.message);
-        }
-        this.setState({ results: res.data.message, error: "" });
-      })
-      .catch(err => this.setState({ error: err.message })); */
+    console.log(this.state.query); // 
+    API.getArticles(this.state.query, this.state.startDate, this.state.endDate)
+    .then(res => {
+      this.setState({ results: (res.data.response.docs) });
+      
+    }); 
   };
-  
+
+  renderArticles = () => {
+    return (
+      this.state.results.map(article => {
+      console.log(article);
+      return (<Results
+        _id={article._id}
+        key={article._id}
+        title={article.headline.main}
+        date={article.pub_date}
+        url={article.web_url}
+      />)
+    }))
+  }
   
   
   
@@ -51,14 +67,39 @@ class App extends Component {
     return (
       <div>
         <Jumbo info="Save your favorite articles">NYT Article Search</Jumbo>
-        <Search 
-          handleFormSubmit={this.handleFormSubmit}
-          handleInputchange={this.handleInputChange}
-          /* query={this.state.query}
-          startDate={this.state.startDate}
-          endDate={this.state.endDate} */
+        <Search>
+        <Input
+            value={this.state.query}
+            onChange={this.handleInputChange}
+            name="query"
+            placeholder="query terms"
         />
-        <Results>{this.state.results}</Results>
+        <Input
+          value={this.state.startDate}
+          onChange={this.handleInputChange}
+          name="startDate"
+          placeholder="start Date YYYYMMDD(required)"
+          maxLength='8'
+        />
+        <Input
+          value={this.state.endDate}
+          onChange={this.handleInputChange}
+          name="endDate"
+          placeholder="end Date YYYYMMDD(required)"
+          maxLength='8'
+        />
+        <FormBtn
+          onClick={this.handleFormSubmit}
+        >Article Search
+        </FormBtn>
+        </Search>
+        <div>
+          <h3 className="text-center">Articles</h3>
+          {this.renderArticles()}
+        </div>
+
+
+
         <Saved>{this.state.saved}</Saved>
       </div>
     );

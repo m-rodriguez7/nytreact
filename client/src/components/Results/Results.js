@@ -3,14 +3,16 @@ import React from "react";
 const Results = props => {
     return(
         <div className="container">
+            
             <div className="row">
                 <div className="col">
-                    <h3 className="text-center">Results</h3>
+                    {props.title}
                 </div>
-            </div>
-            <div className="row">
                 <div className="col">
-                    {props.children}
+                    {props.date}
+                </div>
+                <div className="col">
+                    {props.url}
                 </div>
             </div>
         </div>
